@@ -56,4 +56,5 @@ Returns
 function finalize_observables!(g::AbstractGraph)
 	compute_Δ_method_1!(g)
 	compute_Δ_method_2!(g)
+	return nothing
 end

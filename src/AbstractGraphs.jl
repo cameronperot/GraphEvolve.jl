@@ -36,7 +36,7 @@ abstract type AbstractLattice <: AbstractGraph end
 """
 	Observables
 
-Houses the observables associated to a percolation simulation
+Contains the observables associated to a percolation simulation.
 
 Attributes
 * `avg_cluster_size`     : Array where `avg_cluster_size[t]` is the average cluster size at step `t-1`
@@ -72,14 +72,15 @@ end
 """
 	Network(n::Int; seed::Int=8)
 
-Houses the nodes, edges, clusters, and associated observables of a network
+This type represents a random network in which edges are allowed to be active between any two of the `n` nodes.
+It houses information about the nodes, edges, clusters, and observables.
 
 Arguments
 * `n`               : Total number of nodes in the network
 Keyword Arguments
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
-* `g`               : A new instance of type `Network`
+* `g`               : A new instance of type Network
 Attributes
 * `n`               : Total number of nodes in the network
 * `t`               : Current step in the evolution process, number of edges in the network
@@ -125,14 +126,15 @@ end
 """
 	Lattice2D(L::Int; seed::Int=8)
 
-Houses the nodes, edges, clusters, and associated observables of a 2D lattice
+This type represents a 2D lattice in which edges are only allowed to be active between nearest neighbors.
+It houses information about the nodes, edges, clusters, and observables.
 
 Arguments
 * `L`               : Side length of the square lattice
 Keyword Arguments
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
-* `g`               : A new instance of type `Lattice2D`
+* `g`               : A new instance of type Lattice2D
 Attributes
 * `L`               : Side length of the square lattice
 * `n`               : Total number of nodes in the lattice, `n = L^2`
@@ -182,14 +184,15 @@ end
 """
 	Lattice3D(L::Int; seed::Int=8)
 
-Houses the nodes, edges, clusters, and associated observables of a 3D lattice
+This type represents a 3D lattice in which edges are only allowed to be active between nearest neighbors.
+It houses information about the nodes, edges, clusters, and observables.
 
 Arguments
 * `L`               : Side length of the cubic lattice
 Keyword Arguments
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
-* `g`               : A new instance of type `Lattice3D`
+* `g`               : A new instance of type Lattice3D
 Attributes
 * `L`               : Side length of the cubic lattice
 * `n`               : Total number of nodes in the lattice, `n = L^3`
@@ -234,8 +237,3 @@ mutable struct Lattice3D <: AbstractLattice
 		)
 	end
 end
-
-
-Base.copy(g::Network)   = Network(g.n)
-Base.copy(g::Lattice2D) = Lattice2D(g.n)
-Base.copy(g::Lattice3D) = Lattice3D(g.n)

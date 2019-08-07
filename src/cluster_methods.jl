@@ -173,7 +173,9 @@ Returns
 * None, updates `g` in-place
 """
 function update_observables!(g::AbstractGraph, larger_cluster_id::Int, smaller_cluster_id::Int)
-	push!(g.observables.largest_cluster_size, maximum((g.observables.largest_cluster_size[g.t], length(g.clusters[larger_cluster_id]))))
+	push!(g.observables.largest_cluster_size,
+		maximum((g.observables.largest_cluster_size[g.t], length(g.clusters[larger_cluster_id])))
+	)
 	push!(g.observables.avg_cluster_size, get_avg_cluster_size(g))
 	push!(g.observables.heterogeneity, length(g.cluster_sizes))
 end
