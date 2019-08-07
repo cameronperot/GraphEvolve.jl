@@ -7,7 +7,7 @@ Arguments
 * `g`      : An instance of type AbstractGraph
 * `n_steps`: Number of edges to add to the AbstractGraph
 Returns
-* None, updates `g` in-place
+* `nothing`, updates `g` in-place
 """
 function erdos_renyi!(g::AbstractGraph, n_steps::Int)
 	for t in 1:n_steps
@@ -16,7 +16,7 @@ function erdos_renyi!(g::AbstractGraph, n_steps::Int)
 	end
 
 	finalize_observables!(g)
-	return g
+	return nothing
 end
 
 
@@ -31,7 +31,7 @@ Arguments
 Keyword Arguments
 * `K`      : Bounded size of clusters upon which to determine edge acceptance (default = 1)
 Returns
-* None, updates `g` in-place
+* `nothing`, updates `g` in-place
 """
 function bohman_frieze!(g::AbstractGraph, n_steps::Int; K::Int=2)
 	for t in 1:n_steps
@@ -46,7 +46,7 @@ function bohman_frieze!(g::AbstractGraph, n_steps::Int; K::Int=2)
 	end
 
 	finalize_observables!(g)
-	return g
+	return nothing
 end
 
 
@@ -59,7 +59,7 @@ Arguments
 * `g`      : An instance of type AbstractGraph
 * `n_steps`: Number of edges to add to the AbstractGraph
 Returns
-* None, updates `g` in-place
+* `nothing`, updates `g` in-place
 """
 function product_rule!(g::AbstractGraph, n_steps::Int)
 	for t in 1:n_steps
@@ -78,7 +78,7 @@ function product_rule!(g::AbstractGraph, n_steps::Int)
 	end
 
 	finalize_observables!(g)
-	return g
+	return nothing
 end
 
 
@@ -92,7 +92,7 @@ Arguments
 * `n_steps`: Number of edges to add to the AbstractGraph
 * `q`      : Minimum probability that edge₁ is accepted
 Returns
-* None, updates `g` in-place
+* `nothing`, updates `g` in-place
 """
 function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
 	for t in 1:n_steps
@@ -117,5 +117,5 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
 	end
 
 	finalize_observables!(g)
-	return g
+	return nothing
 end
