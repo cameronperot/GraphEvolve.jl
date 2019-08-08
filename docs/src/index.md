@@ -14,7 +14,7 @@ Percolation theory is a subject with a range of applications, and is often used 
 To be a bit more specific, the topic I am focusing on is explosive percolation, which entails processes where clusters in the graph evolve in such a way that the onset of percolation is delayed until a critical point at which there is a sudden onset of large scale connectivity.
 I have designed and am in the process of analyzing a model for evaluating and adding edges to a graph called stochastic edge acceptance, or SEA for short.
 
-Illustrated in the plot below (system size $n = 10^6$) we can see the order parameter $|C| / n$ plotted against the relative number of edges present in the graph $r = t / n$ where $t$ is the total number of edges present.
+Illustrated in the plot below (system size $n = 10^6$) we can see the order parameter $|C| / n$ of a random network plotted against the relative number of edges present in the graph $r = t / n$ where $t$ is the total number of edges present.
 * ER = Erdos-Renyi Model
 * BF = Bohman-Frieze Model
 * PR = Product Rule Model

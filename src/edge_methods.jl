@@ -27,7 +27,7 @@ Randomly selects an inactive edge in `g`
 Arguments
 * `g`   : An instance of type Lattice2D
 Returns
-* `edge`: A two-tuple of two-tuples of integers representing an inactive edge in `g`
+* `edge`: A two-tuples of integers representing an inactive edge in `g`
 """
 function choose_edge(g::Lattice2D)
 	node     = (rand(g.rng, 1:g.L), rand(g.rng, 1:g.L))
@@ -50,7 +50,7 @@ Randomly selects an inactive edge in `g`
 Arguments
 * `g`   : An instance of type Lattice3D
 Returns
-* `edge`: A two-tuple of three-tuples of integers representing an inactive edge in `g`
+* `edge`: A two-tuple of integers representing an inactive edge in `g`
 """
 function choose_edge(g::Lattice3D)
 	node     = (rand(g.rng, 1:g.L), rand(g.rng, 1:g.L), rand(g.rng, 1:g.L))
@@ -71,10 +71,10 @@ end
 Randomly selects an inactive edge in `g` that is not equal to `edge₁`
 
 Arguments
-* `g`    : An instance of type Lattice2D
-* `edge₁`: A two-tuple of two-tuples of integers representing an inactive edge in `g`
+* `g`    : An instance of type AbstractGraph
+* `edge₁`: A two-tuple of integers representing an inactive edge in `g`
 Returns
-* `edge₂`: A two-tuple of two-tuples of integers representing an inactive edge in `g`
+* `edge₂`: A two-tuple of integers representing an inactive edge in `g` not equal to `edge₁`
 """
 function choose_edge(g::AbstractGraph, edge₁::Tuple)
 	edge₂ = choose_edge(g)
@@ -83,6 +83,28 @@ function choose_edge(g::AbstractGraph, edge₁::Tuple)
 		return edge₂
 	else
 		choose_edge(g, edge₁)
+	end
+end
+
+
+"""
+	choose_edge(g::AbstractGraph, edges::Array{Tuple{Int, Int}, 1})
+
+Randomly selects an inactive edge in `g` that is not equal to `edge₁`
+
+Arguments
+* `g`    : An instance of type AbstractGraph
+* `edges`: An array of two-tuples of integers representing inactive edges in `g`
+Returns
+* `edge`: A two-tuple of integers representing an inactive edge in `g` not in `edges`
+"""
+function choose_edge(g::AbstractGraph, edges::Array{Tuple{Int, Int}, 1})
+	edge = choose_edge(g)
+
+	if edge ∉ edges && reverse(edge) ∉ edges
+		return edge
+	else
+		choose_edge(g, edges)
 	end
 end
 
