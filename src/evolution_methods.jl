@@ -167,3 +167,70 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
 	finalize_observables!(g)
 	return g
 end
+
+
+"""
+	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+
+q-edge Achlioptas process, a probability based model for accepting edges
+
+Arguments
+* `g`      : An instance of type AbstractGraph
+* `n_steps`: Number of edges to add to the AbstractGraph
+* `q`      : Number of edges to evaluate
+Returns
+* `g`, updates `g` in-place
+"""
+function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dict, savepath::String)
+	t₀, t₁ = t_data[(g.n, Int(g.rng.seed[1]))]
+	for t in 1:n_steps
+		edge₁ = choose_edge(g)
+		edge₂ = choose_edge(g, edge₁)
+
+		if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
+			add_edge!(g, edge₁)
+		elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
+			add_edge!(g, edge₂)
+		else
+			C₁ = length(g.clusters[g.cluster_ids[edge₁[1]]]) + length(g.clusters[g.cluster_ids[edge₁[2]]])
+			C₂ = length(g.clusters[g.cluster_ids[edge₂[1]]]) + length(g.clusters[g.cluster_ids[edge₂[2]]])
+			p = (1 / C₁) / (1 / C₁ + 1 / C₂)
+
+			if p > rand(g.rng)
+				add_edge!(g, edge₁)
+			else
+				add_edge!(g, edge₂)
+			end
+		end
+
+		if t == t₀
+			save(
+				joinpath(
+					savepath,
+					"t_0",
+					"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).jld"
+				),
+				"n",
+				g.n,
+				"t_0_cluster_size_distribution",
+				g.cluster_sizes,
+			)
+		end
+		if t == t₁
+			save(
+				joinpath(
+					savepath,
+					"t_1",
+					"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).jld"
+				),
+				"n",
+				g.n,
+				"t_1_cluster_size_distribution",
+				g.cluster_sizes,
+			)
+		end
+	end
+
+	finalize_observables!(g)
+	return g
+end
