@@ -29,7 +29,7 @@ Arguments
 * `g`      : An instance of type AbstractGraph
 * `n_steps`: Number of edges to add to the AbstractGraph
 Keyword Arguments
-* `K`      : Bounded size of clusters upon which to determine edge acceptance (default = 1)
+* `K`      : Bounded size of clusters upon which to determine edge acceptance (default = 2)
 Returns
 * `g`, updates `g` in-place
 """
