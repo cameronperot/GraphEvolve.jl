@@ -85,12 +85,11 @@ end
 """
 	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
 
-Achlioptas process, a probability based rule for accepting edges
+Achlioptas process, a probability based model for accepting edges
 
 Arguments
 * `g`      : An instance of type AbstractGraph
 * `n_steps`: Number of edges to add to the AbstractGraph
-* `q`      : Minimum probability that edge₁ is accepted
 Returns
 * `g`, updates `g` in-place
 """
@@ -112,6 +111,55 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
 				add_edge!(g, edge₁)
 			else
 				add_edge!(g, edge₂)
+			end
+		end
+	end
+
+	finalize_observables!(g)
+	return g
+end
+
+
+"""
+	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+
+q-edge Achlioptas process, a probability based model for accepting edges
+
+Arguments
+* `g`      : An instance of type AbstractGraph
+* `n_steps`: Number of edges to add to the AbstractGraph
+* `q`      : Number of edges to evaluate
+Returns
+* `g`, updates `g` in-place
+"""
+function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+	for t in 1:n_steps
+		edges = [choose_edge(g)]
+		for i in 1:q-1
+			push!(edges, choose_edge(g, edges))
+		end
+
+		edge_added = false
+		for edge in edges
+			if g.cluster_ids[edge[1]] == g.cluster_ids[edge[2]]
+				add_edge!(g, edge)
+				edge_added = true
+				break
+			end
+		end
+		if edge_added continue end
+
+		C = [(length(g.clusters[g.cluster_ids[edge[1]]]) + length(g.clusters[g.cluster_ids[edge[2]]]))
+			for edge in edges
+		]
+		p = (1 ./ C) ./ sum(1 ./ C)
+		R = rand(g.rng)
+		P = 0
+		for i in 1:q
+			P += p[i]
+			if R < P
+				add_edge!(g, edges[i])
+				break
 			end
 		end
 	end
