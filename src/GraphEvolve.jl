@@ -38,8 +38,7 @@ product_rule!,
 stochastic_edge_acceptance!,
 
 # analysis_methods
-compute_Δ_method_1!,
-compute_Δ_method_2!,
+compute_delta!,
 finalize_observables!
 
 # includes

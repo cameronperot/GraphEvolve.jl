@@ -42,28 +42,24 @@ Attributes
 * `avg_cluster_size`     : Array where `avg_cluster_size[t]` is the average cluster size at step `t-1`
 * `heterogeneity`        : Array where `heterogeneity[t]` is the number of unique cluster sizes at step `t-1`
 * `largest_cluster_size` : Array where `C[t]` is the largest cluster size at step `t-1`
-* `Δ_method_1`           : Tuple (Δ, t₀, t₁), see analysis_methods.compute_Δ_method_1 for more info
-* `Δ_method_1`           : Tuple (Δ, t₀, t₁), see analysis_methods.compute_Δ_method_2 for more info
+* `delta`                : See analysis_methods.compute_delta for more info
 """
 mutable struct Observables
 	avg_cluster_size     ::Array{Float64, 1}
 	heterogeneity        ::Array{Int, 1}
 	largest_cluster_size ::Array{Int, 1}
-	Δ_method_1           ::Tuple
-	Δ_method_2           ::Tuple
+	delta           ::Tuple
 
 	function Observables()
 		avg_cluster_size     = [1.0]
 		heterogeneity        = [1]
 		largest_cluster_size = [1]
-		Δ_method_1           = ()
-		Δ_method_2           = ()
+		delta           = ()
 
 		new(avg_cluster_size,
 			heterogeneity,
 			largest_cluster_size,
-			Δ_method_1,
-			Δ_method_2
+			delta
 		)
 	end
 end
