@@ -170,14 +170,16 @@ end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dict, savepath::String)
 
-q-edge Achlioptas process, a probability based model for accepting edges
+Customized version of `stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)` that
+saves the cluster size distrubtions at `t₀` and `t₁` to a .csv in savepath
 
 Arguments
-* `g`      : An instance of type AbstractGraph
-* `n_steps`: Number of edges to add to the AbstractGraph
-* `q`      : Number of edges to evaluate
+* `g`       : An instance of type AbstractGraph
+* `n_steps` : Number of edges to add to the AbstractGraph
+* `t_data`  : Dict with `(n, seed)` as keys and `(t₀, t₁)` as values
+* `savepath`: Path which to save the cluster size distributions in
 Returns
 * `g`, updates `g` in-place
 """
@@ -225,7 +227,15 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dic
 	return g
 end
 
+"""
+	save_cluster_size_dict(d, n, savefile)
+Saves the input cluster size distribution dictionary `d` to `savefile`
 
+Arguments
+* `d`       : Cluster size distribution dictionary, i.e. `g.cluster_sizes`
+* `n`       : Number of nodes in `g`, i.e. `g.n`
+* `savefile`: Path which to save the cluster size distributions in
+"""
 function save_cluster_size_dict(d, n, savefile)
 	open(savefile, "w") do f
 		write(f, "# n = $(n)\n")
