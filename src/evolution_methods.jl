@@ -204,33 +204,34 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dic
 		end
 
 		if t == t₀
-			save(
-				joinpath(
-					savepath,
-					"t_0",
-					"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).jld"
-				),
-				"n",
-				g.n,
-				"t_0_cluster_size_distribution",
-				g.cluster_sizes,
+			savefile = joinpath(
+				savepath,
+				"t_0",
+				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
 			)
+			save_cluster_size_dict(g.cluster_sizes, g.n, savefile)
 		end
 		if t == t₁
-			save(
-				joinpath(
-					savepath,
-					"t_1",
-					"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).jld"
-				),
-				"n",
-				g.n,
-				"t_1_cluster_size_distribution",
-				g.cluster_sizes,
+			savefile = joinpath(
+				savepath,
+				"t_1",
+				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
 			)
+			save_cluster_size_dict(g.cluster_sizes, g.n, savefile)
 		end
 	end
 
 	finalize_observables!(g)
 	return g
+end
+
+
+function save_cluster_size_dict(d, n, savefile)
+	open(savefile, "w") do f
+		write(f, "# n = $(n)\n")
+		write(f, "cluster_size,cluster_size_count\n")
+		for (key, value) in d
+			write(f, "$(key),$(value)\n")
+		end
+	end
 end
