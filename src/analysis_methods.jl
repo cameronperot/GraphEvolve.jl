@@ -12,14 +12,14 @@ Returns
 * `nothing`, updates `g` in-place
 """
 function compute_Δ_method_1!(g::AbstractGraph)
-	t₀ = sum(g.observables.largest_cluster_size .< sqrt(g.n))
-	t₁ = sum(g.observables.largest_cluster_size .<= 0.5g.n) + 1
+	t₀ = sum(g.observables.largest_cluster_size .< sqrt(g.n)) - 1
+	t₁ = sum(g.observables.largest_cluster_size .<= 0.5g.n)
 
-	C₀ = g.observables.largest_cluster_size[t₀]
+	C₀ = g.observables.largest_cluster_size[t₀+1]
 	if t₁ > g.t
 		C₁ = NaN
 	else
-		C₁ = g.observables.largest_cluster_size[t₁]
+		C₁ = g.observables.largest_cluster_size[t₁+1]
 	end
 
 	g.observables.Δ_method_1 = (t₀, t₁, C₀, C₁) ./ g.n
@@ -41,14 +41,14 @@ Returns
 * `nothing`, updates `g` in-place
 """
 function compute_Δ_method_2!(g::AbstractGraph)
-	t₀ = argmax(g.observables.heterogeneity)
+	t₀ = argmax(g.observables.heterogeneity) - 1 # because t+1 observations when t edges active
 	t₁ = argmax(
 		[g.observables.largest_cluster_size[i+1] - g.observables.largest_cluster_size[i]
 		for i in 1:length(g.observables.largest_cluster_size)-1]
-	) + 1
+	)
 
-	C₀ = g.observables.largest_cluster_size[t₀]
-	C₁ = g.observables.largest_cluster_size[t₁]
+	C₀ = g.observables.largest_cluster_size[t₀+1]
+	C₁ = g.observables.largest_cluster_size[t₁+1]
 
 	g.observables.Δ_method_2 = (t₀, t₁, C₀, C₁) ./ g.n
 	return nothing
