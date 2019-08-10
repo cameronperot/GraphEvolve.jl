@@ -31,7 +31,7 @@ julia> scatter!(x, y,
            legend=false,
            marker=(2, :dodgerblue, :circle, 0.9, stroke(0)),
            xaxis=(latexstring("r"), (0, 1.5), 0:0.5:1.5),
-           yaxis=(latexstring("|C|/n"), (0, 1), 0:0.2:1)
+           yaxis=(latexstring("|C|/N"), (0, 1), 0:0.2:1)
        );
 
 julia> savefig(plot_, "/tmp/order_param.png")
