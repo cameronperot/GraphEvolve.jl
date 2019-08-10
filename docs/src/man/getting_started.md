@@ -21,9 +21,9 @@ julia> g = Network(10^6);
 
 julia> stochastic_edge_acceptance!(g, Int(1.5*10^6));
 
-julia> x = collect(0:g.t) ./ g.n;
+julia> x = collect(0:g.t) ./ g.N;
 
-julia> y = g.observables.largest_cluster_size ./ g.n;
+julia> y = g.observables.largest_cluster_size ./ g.N;
 
 julia> plot_ = plot(dpi=300);
 

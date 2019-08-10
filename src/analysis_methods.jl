@@ -21,7 +21,7 @@ function compute_delta!(g::AbstractGraph)
 	C₀ = g.observables.largest_cluster_size[t₀+1]
 	C₁ = g.observables.largest_cluster_size[t₁+1]
 
-	g.observables.delta = (t₀, t₁, C₀, C₁) ./ g.n
+	g.observables.delta = (t₀, t₁, C₀, C₁) ./ g.N
 	return nothing
 end
 

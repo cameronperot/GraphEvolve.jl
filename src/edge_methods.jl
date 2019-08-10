@@ -9,7 +9,7 @@ Returns
 * `edge`: A two-tuple of integers representing an inactive edge in `g`
 """
 function choose_edge(g::Network)
-	edge = (rand(g.rng, 1:g.n), rand(g.rng, 1:g.n))
+	edge = (rand(g.rng, 1:g.N), rand(g.rng, 1:g.N))
 
 	if edge[1] ≠ edge[2] && edge ∉ g.edges && reverse(edge) ∉ g.edges
 		return edge
