@@ -178,13 +178,13 @@ saves the cluster size distrubtions at `t₀` and `t₁` to a .csv in savepath
 Arguments
 * `g`       : An instance of type AbstractGraph
 * `n_steps` : Number of edges to add to the AbstractGraph
-* `t_data`  : Dict with `(n, seed)` as keys and `(t₀, t₁)` as values
+* `t_data`  : Dict with `(N, seed)` as keys and `(t₀, t₁)` as values
 * `savepath`: Path which to save the cluster size distributions in
 Returns
 * `g`, updates `g` in-place
 """
 function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dict, savepath::String)
-	t₀, t₁ = t_data[(g.n, Int(g.rng.seed[1]))]
+	t₀, t₁ = t_data[(g.N, Int(g.rng.seed[1]))]
 	for t in 1:n_steps
 		edge₁ = choose_edge(g)
 		edge₂ = choose_edge(g, edge₁)
@@ -209,17 +209,17 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dic
 			savefile = joinpath(
 				savepath,
 				"t_0",
-				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
+				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
 			)
-			save_cluster_size_dict(g.cluster_sizes, g.n, savefile)
+			save_cluster_size_dict(g.cluster_sizes, g.N, savefile)
 		end
 		if t == t₁
 			savefile = joinpath(
 				savepath,
 				"t_1",
-				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.n)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
+				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
 			)
-			save_cluster_size_dict(g.cluster_sizes, g.n, savefile)
+			save_cluster_size_dict(g.cluster_sizes, g.N, savefile)
 		end
 	end
 
@@ -233,12 +233,12 @@ Saves the input cluster size distribution dictionary `d` to `savefile`
 
 Arguments
 * `d`       : Cluster size distribution dictionary, i.e. `g.cluster_sizes`
-* `n`       : Number of nodes in `g`, i.e. `g.n`
+* `N`       : Number of nodes in `g`, i.e. `g.N`
 * `savefile`: Path which to save the cluster size distributions in
 """
-function save_cluster_size_dict(d, n, savefile)
+function save_cluster_size_dict(d, N, savefile)
 	open(savefile, "w") do f
-		write(f, "# n = $(n)\n")
+		write(f, "# N = $(N)\n")
 		write(f, "cluster_size,cluster_size_count\n")
 		for (key, value) in d
 			write(f, "$(key),$(value)\n")

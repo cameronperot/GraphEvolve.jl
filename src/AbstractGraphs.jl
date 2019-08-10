@@ -48,13 +48,13 @@ mutable struct Observables
 	avg_cluster_size     ::Array{Float64, 1}
 	heterogeneity        ::Array{Int, 1}
 	largest_cluster_size ::Array{Int, 1}
-	delta           ::Tuple
+	delta                ::Tuple
 
 	function Observables()
 		avg_cluster_size     = [1.0]
 		heterogeneity        = [1]
 		largest_cluster_size = [1]
-		delta           = ()
+		delta                = ()
 
 		new(avg_cluster_size,
 			heterogeneity,
@@ -66,19 +66,19 @@ end
 
 
 """
-	Network(n::Int; seed::Int=8)
+	Network(N::Int; seed::Int=8)
 
-This type represents a random network in which edges are allowed to be active between any two of the `n` nodes.
+This type represents a random network in which edges are allowed to be active between any two of the `N` nodes.
 It houses information about the nodes, edges, clusters, and observables.
 
 Arguments
-* `n`               : Total number of nodes in the network
+* `N`               : Total number of nodes in the network
 Keyword Arguments
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
 * `g`               : A new instance of type Network
 Attributes
-* `n`               : Total number of nodes in the network
+* `N`               : Total number of nodes in the network
 * `t`               : Current step in the evolution process, number of edges in the network
 * `edges`           : Set of edges present in the network
 * `cluster_ids`     : Array with nodes as indices and cluster IDs as values
@@ -88,7 +88,7 @@ Attributes
 * `observables`     : Custom type containing observables associated with `g`
 """
 mutable struct Network <: AbstractNetwork
-	n               ::Int
+	N               ::Int
 	t               ::Int
 	edges           ::Set{Tuple{Int, Int}}
 	cluster_ids     ::Array{Int, 1}
@@ -97,16 +97,16 @@ mutable struct Network <: AbstractNetwork
 	rng             ::MersenneTwister
 	observables     ::Observables
 
-	function Network(n::Int; seed::Int=8)
+	function Network(N::Int; seed::Int=8)
 		t                = 0
 		edges            = Set()
-		cluster_ids      = collect(1:n)
-		clusters         = Dict(1:n .=> Set.(1:n))
-		cluster_sizes    = Dict(1 => n)
+		cluster_ids      = collect(1:N)
+		clusters         = Dict(1:N .=> Set.(1:N))
+		cluster_sizes    = Dict(1 => N)
 		rng              = MersenneTwister(seed)
 		observables      = Observables()
 
-		new(n,
+		new(N,
 			t,
 			edges,
 			cluster_ids,
@@ -133,7 +133,7 @@ Returns
 * `g`               : A new instance of type Lattice2D
 Attributes
 * `L`               : Side length of the square lattice
-* `n`               : Total number of nodes in the lattice, `n = L^2`
+* `N`               : Total number of nodes in the lattice, `N = L^2`
 * `t`               : Current step in the evolution process, number of edges in the lattice
 * `edges`           : Set of edges present in the lattice
 * `cluster_ids`     : Array with nodes as indices and cluster IDs as values
@@ -144,7 +144,7 @@ Attributes
 """
 mutable struct Lattice2D <: AbstractLattice
 	L               ::Int
-	n               ::Int
+	N               ::Int
 	t               ::Int
 	edges           ::Set{Tuple{Int, Int}}
 	cluster_ids     ::Array{Int, 2}
@@ -154,17 +154,17 @@ mutable struct Lattice2D <: AbstractLattice
 	observables     ::Observables
 
 	function Lattice2D(L::Int; seed::Int=8)
-		n                = L^2
+		N                = L^2
 		t                = 0
 		edges            = Set()
-		cluster_ids      = reshape(collect(1:n), (L, L))
-		clusters         = Dict(1:n .=> Set.(1:n))
-		cluster_sizes    = Dict(1 => n)
+		cluster_ids      = reshape(collect(1:N), (L, L))
+		clusters         = Dict(1:N .=> Set.(1:N))
+		cluster_sizes    = Dict(1 => N)
 		rng              = MersenneTwister(seed)
 		observables      = Observables()
 
 		new(L,
-			n,
+			N,
 			t,
 			edges,
 			cluster_ids,
@@ -191,7 +191,7 @@ Returns
 * `g`               : A new instance of type Lattice3D
 Attributes
 * `L`               : Side length of the cubic lattice
-* `n`               : Total number of nodes in the lattice, `n = L^3`
+* `N`               : Total number of nodes in the lattice, `N = L^3`
 * `t`               : Current step in the evolution process, number of edges in the lattice
 * `edges`           : Set of edges present in the lattice
 * `cluster_ids`     : Array with nodes as indices and cluster IDs as values
@@ -202,7 +202,7 @@ Attributes
 """
 mutable struct Lattice3D <: AbstractLattice
 	L               ::Int
-	n               ::Int
+	N               ::Int
 	t               ::Int
 	edges           ::Set{Tuple{Int, Int}}
 	cluster_ids     ::Array{Int, 3}
@@ -212,17 +212,17 @@ mutable struct Lattice3D <: AbstractLattice
 	observables     ::Observables
 
 	function Lattice3D(L::Int; seed::Int=8)
-		n                = L^3
+		N                = L^3
 		t                = 0
 		edges            = Set()
-		cluster_ids      = reshape(collect(1:n), (L, L, L))
-		clusters         = Dict(1:n .=> Set.(1:n))
-		cluster_sizes    = Dict(1 => n)
+		cluster_ids      = reshape(collect(1:N), (L, L, L))
+		clusters         = Dict(1:N .=> Set.(1:N))
+		cluster_sizes    = Dict(1 => N)
 		rng              = MersenneTwister(seed)
 		observables      = Observables()
 
 		new(L,
-			n,
+			N,
 			t,
 			edges,
 			cluster_ids,
