@@ -211,7 +211,7 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dic
 				"t_0",
 				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
 			)
-			save_cluster_size_dict(g.cluster_sizes, g.N, savefile)
+			save_cluster_size_dict(g, savefile)
 		end
 		if t == t₁
 			savefile = joinpath(
@@ -219,7 +219,7 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dic
 				"t_1",
 				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
 			)
-			save_cluster_size_dict(g.cluster_sizes, g.N, savefile)
+			save_cluster_size_dict(g, savefile)
 		end
 	end
 
@@ -236,11 +236,12 @@ Arguments
 * `N`       : Number of nodes in `g`, i.e. `g.N`
 * `savefile`: Path which to save the cluster size distributions in
 """
-function save_cluster_size_dict(d, N, savefile)
+function save_cluster_size_dict(g, savefile)
 	open(savefile, "w") do f
-		write(f, "# N = $(N)\n")
+		write(f, "# N = $(g.N)\n")
+		write(f, "# seed = $(Int(g.rng.seed[1]))\n")
 		write(f, "cluster_size,cluster_size_count\n")
-		for (key, value) in d
+		for (key, value) in g.cluster_sizes
 			write(f, "$(key),$(value)\n")
 		end
 	end

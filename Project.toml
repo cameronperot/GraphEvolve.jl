@@ -1,6 +1,6 @@
 name = "GraphEvolve"
 uuid = "b326b866-b5f7-11e9-33e0-b9150ee88de7"
-authors = ["Cameron Perot <cameron.perot@protonmail.ch>"]
+authors = ["Cameron Perot <cameronperot@users.noreply.github.com>"]
 version = "0.1.0"
 
 [deps]

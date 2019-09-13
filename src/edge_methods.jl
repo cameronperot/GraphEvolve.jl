@@ -146,7 +146,7 @@ end
 """
 	nearest_neighbors(g::Lattice2D, node::Tuple{Int, Int})
 
-Determines the next-nearest neighbors of `node`
+Determines the nearest neighbors of `node`
 
 Arguments
 * `g`        : An instance of type Lattice2D
@@ -165,7 +165,7 @@ end
 """
 	nearest_neighbors(g::Lattice3D, node::Tuple{Int, Int, Int})
 
-Determines the next-nearest neighbors of `node`
+Determines the nearest neighbors of `node`
 
 Arguments
 * `g`        : An instance of type Lattice3D
