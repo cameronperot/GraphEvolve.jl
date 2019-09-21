@@ -15,7 +15,13 @@ Here's an example of how to instantiate a `Network` type, evolve it using the `s
 ```
 julia> using GraphEvolve
 
-julia> using Plots; gr(fmt="png")
+julia> using Plots; pyplot(fmt="png"); using LaTeXStrings
+
+julia> PyPlot.matplotlib.rc("mathtext", fontset="cm");
+
+julia> PyPlot.matplotlib.rc("text", usetex=true);
+
+julia> PyPlot.matplotlib.rc("font", family="serif", size=12);
 
 julia> g = Network(10^6);
 
@@ -30,7 +36,7 @@ julia> plot_ = plot(dpi=300);
 julia> scatter!(x, y,
            legend=false,
            marker=(2, :dodgerblue, :circle, 0.9, stroke(0)),
-           xaxis=(latexstring("r"), (0, 1.5), 0:0.5:1.5),
+           xaxis=(latexstring("t/N"), (0, 1.5), 0:0.5:1.5),
            yaxis=(latexstring("|C|/N"), (0, 1), 0:0.2:1)
        );
 
