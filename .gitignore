@@ -359,3 +359,5 @@ TSWLatexianTemp*
 *.spl
 
 .remote-sync.json
+
+docs/build/
