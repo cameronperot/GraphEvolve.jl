@@ -1,9 +1,9 @@
 # Evolution Methods
 
 ```@docs
-erdos_renyi!(g::AbstractGraph, n_steps::Int)
-bohman_frieze!(g::AbstractGraph, n_steps::Int; K::Int=2)
-product_rule!(g::AbstractGraph, n_steps::Int)
-stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
-stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+erdos_renyi!(g::AbstractGraph, n_steps::Integer)
+bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer=2)
+product_rule!(g::AbstractGraph, n_steps::Integer)
+stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)
+stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, q::Integer)
 ```

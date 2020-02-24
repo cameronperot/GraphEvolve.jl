@@ -1,5 +1,5 @@
 """
-	erdos_renyi!(g::AbstractGraph, n_steps::Int)
+	erdos_renyi!(g::AbstractGraph, n_steps::Integer)
 
 Erdos-Renyi style graph evolution, adds edges randomly at each step
 
@@ -9,7 +9,7 @@ Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function erdos_renyi!(g::AbstractGraph, n_steps::Int)
+function erdos_renyi!(g::AbstractGraph, n_steps::Integer)
 	for t in 1:n_steps
 		edge = choose_edge(g)
 		add_edge!(g, edge)
@@ -21,7 +21,7 @@ end
 
 
 """
-	bohman_frieze!(g::AbstractGraph, n_steps::Int; K::Int=2)
+	bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer=2)
 
 Achlioptas process, implementation of Bohman-Frieze bounded size rule
 
@@ -33,7 +33,7 @@ Keyword Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function bohman_frieze!(g::AbstractGraph, n_steps::Int; K::Int=2)
+function bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer=2)
 	for t in 1:n_steps
 		edge₁ = choose_edge(g)
 		edge₂ = choose_edge(g, edge₁)
@@ -51,7 +51,7 @@ end
 
 
 """
-	product_rule!(g::AbstractGraph, n_steps::Int)
+	product_rule!(g::AbstractGraph, n_steps::Integer)
 
 Achlioptas process, implementation of the product rule
 
@@ -61,7 +61,7 @@ Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function product_rule!(g::AbstractGraph, n_steps::Int)
+function product_rule!(g::AbstractGraph, n_steps::Integer)
 	for t in 1:n_steps
 		edge₁ = choose_edge(g)
 		edge₂ = choose_edge(g, edge₁)
@@ -83,7 +83,7 @@ end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
+	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)
 
 Achlioptas process, a probability based model for accepting edges
 
@@ -93,7 +93,7 @@ Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)
+function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)
 	for t in 1:n_steps
 		edge₁ = choose_edge(g)
 		edge₂ = choose_edge(g, edge₁)
@@ -121,7 +121,7 @@ end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, q::Integer)
 
 q-edge Achlioptas process, a probability based model for accepting edges
 
@@ -132,7 +132,7 @@ Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, q::Int)
+function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, q::Integer)
 	for t in 1:n_steps
 		edges = [choose_edge(g)]
 		for i in 1:q-1
@@ -170,9 +170,9 @@ end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dict, savepath::String)
+	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data::Dict, savepath::String)
 
-Customized version of `stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int)` that
+Customized version of `stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)` that
 saves the cluster size distrubtions at `t₀` and `t₁` to a .csv in savepath
 
 Arguments
@@ -183,7 +183,7 @@ Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Int, t_data::Dict, savepath::String)
+function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data::Dict, savepath::String)
 	t₀, t₁ = t_data[(g.N, Int(g.rng.seed[1]))]
 	for t in 1:n_steps
 		edge₁ = choose_edge(g)

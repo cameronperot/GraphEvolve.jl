@@ -9,7 +9,8 @@ Returns
 * `edge`: A two-tuple of integers representing an inactive edge in `g`
 """
 function choose_edge(g::Network)
-	edge = (rand(g.rng, 1:g.N), rand(g.rng, 1:g.N))
+	node_ids = UnitRange{eltype(g.cluster_ids)}(1, g.N)
+	edge     = (rand(g.rng, node_ids), rand(g.rng, node_ids))
 
 	if edge[1] ≠ edge[2] && edge ∉ g.edges && reverse(edge) ∉ g.edges
 		return edge
@@ -30,7 +31,8 @@ Returns
 * `edge`: A two-tuples of integers representing an inactive edge in `g`
 """
 function choose_edge(g::Lattice2D)
-	node     = (rand(g.rng, 1:g.L), rand(g.rng, 1:g.L))
+	node_ids = UnitRange{eltype(g.cluster_ids)}(1, g.L)
+	node     = (rand(g.rng, node_ids), rand(g.rng, node_ids))
 	neighbor = nearest_neighbors(g, node)[rand(g.rng, 1:4)]
 	edge     = (cart_to_lin(node, g.L), cart_to_lin(neighbor, g.L))
 
@@ -66,7 +68,7 @@ end
 
 
 """
-	choose_edge(g::AbstractGraph, edge₁::Tuple)
+	choose_edge(g::AbstractGraph, edge₁::NTuple{2, Integer})
 
 Randomly selects an inactive edge in `g` that is not equal to `edge₁`
 
@@ -76,7 +78,7 @@ Arguments
 Returns
 * `edge₂`: A two-tuple of integers representing an inactive edge in `g` not equal to `edge₁`
 """
-function choose_edge(g::AbstractGraph, edge₁::Tuple)
+function choose_edge(g::AbstractGraph, edge₁::NTuple{2, Integer})
 	edge₂ = choose_edge(g)
 
 	if edge₂ ≠ edge₁ && edge₂ ≠ reverse(edge₁)
@@ -88,7 +90,7 @@ end
 
 
 """
-	choose_edge(g::AbstractGraph, edges::Array{Tuple{Int, Int}, 1})
+	choose_edge(g::AbstractGraph, edges::Array{NTuple{2, Integer}, 1})
 
 Randomly selects an inactive edge in `g` that is not equal to `edge₁`
 
@@ -98,7 +100,7 @@ Arguments
 Returns
 * `edge`: A two-tuple of integers representing an inactive edge in `g` not in `edges`
 """
-function choose_edge(g::AbstractGraph, edges::Array{Tuple{Int, Int}, 1})
+function choose_edge(g::AbstractGraph, edges::Array{NTuple{2, Integer}, 1})
 	edge = choose_edge(g)
 
 	if edge ∉ edges && reverse(edge) ∉ edges
@@ -110,7 +112,7 @@ end
 
 
 """
-	add_edge!(g::AbstractGraph, edge::Tuple)
+	add_edge!(g::AbstractGraph, edge::NTuple{2, Integer})
 
 Adds an edge to `g`
 
@@ -120,7 +122,7 @@ Arguments
 Returns
 * None, updates `g` in-place
 """
-function add_edge!(g::AbstractGraph, edge::Tuple)
+function add_edge!(g::AbstractGraph, edge::NTuple{2, Integer})
 	push!(g.edges, edge)
 	g.t += 1
 	update_clusters!(g, edge)
@@ -135,16 +137,16 @@ Functions below this point are for determining nearest-neighbors with periodic b
 """
 `plus` and `minus` are an implementation of periodic boundary conditions for use in the `nearest_neighbors` functions below
 """
-function plus(L::Int, i::Int)
+function plus(L::Integer, i::Integer)
 	i == L ? 1 : i+1
 end
-function minus(L::Int, i::Int)
+function minus(L::Integer, i::Integer)
 	i == 1 ? L : i-1
 end
 
 
 """
-	nearest_neighbors(g::Lattice2D, node::Tuple{Int, Int})
+	nearest_neighbors(g::Lattice2D, node::NTuple{2, Integer})
 
 Determines the nearest neighbors of `node`
 
@@ -154,7 +156,7 @@ Arguments
 Returns
 * `neighbors`: A four-tuple of two-tuples of integers representing the cartesian indices of the (up, down, left, right) neighbors
 """
-function nearest_neighbors(g::Lattice2D, node::Tuple{Int, Int})
+function nearest_neighbors(g::Lattice2D, node::NTuple{2, Integer})
 	return ((minus(g.L, node[1]), node[2]),
 			(plus(g.L, node[1]), node[2]),
 			(node[1], minus(g.L, node[2])),
@@ -163,7 +165,7 @@ end
 
 
 """
-	nearest_neighbors(g::Lattice3D, node::Tuple{Int, Int, Int})
+	nearest_neighbors(g::Lattice3D, node::NTuple{3, Integer})
 
 Determines the nearest neighbors of `node`
 
@@ -173,7 +175,7 @@ Arguments
 Returns
 * `neighbors`: A four-tuple of three-tuples of integers representing the cartesian indices of the (up, down, left, right, front, back) neighbors
 """
-function nearest_neighbors(g::Lattice3D, node::Tuple{Int, Int, Int})
+function nearest_neighbors(g::Lattice3D, node::NTuple{3, Integer})
 	return ((minus(g.L, node[1]), node[2], node[3]),
 			(plus(g.L, node[1]), node[2], node[3]),
 			(node[1], minus(g.L, node[2]), node[3]),
@@ -184,7 +186,7 @@ end
 
 
 """
-	cart_to_lin(cart::Tuple, L::Int)
+	cart_to_lin(cart::Tuple, L::Integer)
 
 Converts d-dimensional Cartesian index (d-tuple) to linear index
 
@@ -194,7 +196,7 @@ Arguments
 Returns
 * `lin`  : Linear index in the lattice corresponding to cart
 """
-function cart_to_lin(cart::Tuple, L::Int)
+function cart_to_lin(cart::Tuple, L::Integer)
 	if length(cart) == 2
 		return (cart[2] - 1) * L + cart[1]
 	elseif length(cart) == 3
