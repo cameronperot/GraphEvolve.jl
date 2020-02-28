@@ -60,7 +60,7 @@ mutable struct Observables
 			heterogeneity,
 			largest_cluster_size,
 			delta
-		)
+			)
 	end
 end
 
@@ -115,7 +115,7 @@ mutable struct Network{T <: Integer} <: AbstractNetwork
 			cluster_sizes,
 			rng,
 			observables
-		)
+			)
 	end
 end
 
@@ -174,7 +174,7 @@ mutable struct Lattice2D{T <: Integer} <: AbstractLattice
 			cluster_sizes,
 			rng,
 			observables
-		)
+			)
 	end
 end
 
@@ -233,6 +233,6 @@ mutable struct Lattice3D{T <: Integer} <: AbstractLattice
 			cluster_sizes,
 			rng,
 			observables
-		)
+			)
 	end
 end

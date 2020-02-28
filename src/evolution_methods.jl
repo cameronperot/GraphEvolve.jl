@@ -210,7 +210,7 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data:
 				savepath,
 				"t_0",
 				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
-			)
+				)
 			save_cluster_size_dict(g, savefile)
 		end
 		if t == t₁
@@ -218,7 +218,7 @@ function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data:
 				savepath,
 				"t_1",
 				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
-			)
+				)
 			save_cluster_size_dict(g, savefile)
 		end
 	end
