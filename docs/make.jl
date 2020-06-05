@@ -1,4 +1,4 @@
-path = "/home/user/thesis/code/GraphEvolve.jl/src/"
+path = "/home/user/programming/GraphEvolve.jl/src/"
 push!(LOAD_PATH, path)
 using Documenter, GraphEvolve
 
