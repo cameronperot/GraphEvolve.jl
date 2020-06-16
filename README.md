@@ -30,7 +30,7 @@ julia> PyPlot.matplotlib.rc("text", usetex=true);
 
 julia> PyPlot.matplotlib.rc("font", family="serif", size=12);
 
-julia> g = Network(10^6);
+julia> g = Network{UInt32}(10^6);
 
 julia> stochastic_edge_acceptance!(g, Int(1.5*10^6));
 
