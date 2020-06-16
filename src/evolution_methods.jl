@@ -1,5 +1,5 @@
 """
-	erdos_renyi!(g::AbstractGraph, n_steps::Integer)
+    erdos_renyi!(g::AbstractGraph, n_steps::Integer)
 
 Erdos-Renyi style graph evolution, adds edges randomly at each step
 
@@ -10,18 +10,18 @@ Returns
 * `g`, updates `g` in-place
 """
 function erdos_renyi!(g::AbstractGraph, n_steps::Integer)
-	for t in 1:n_steps
-		edge = choose_edge(g)
-		add_edge!(g, edge)
-	end
+    for t = 1:n_steps
+        edge = choose_edge(g)
+        add_edge!(g, edge)
+    end
 
-	finalize_observables!(g)
-	return g
+    finalize_observables!(g)
+    return g
 end
 
 
 """
-	bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer=2)
+    bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer=2)
 
 Achlioptas process, implementation of Bohman-Frieze bounded size rule
 
@@ -33,25 +33,26 @@ Keyword Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer=2)
-	for t in 1:n_steps
-		edge₁ = choose_edge(g)
-		edge₂ = choose_edge(g, edge₁)
+function bohman_frieze!(g::AbstractGraph, n_steps::Integer; K::Integer = 2)
+    for t = 1:n_steps
+        edge₁ = choose_edge(g)
+        edge₂ = choose_edge(g, edge₁)
 
-		if length(g.clusters[g.cluster_ids[edge₁[1]]]) < K && length(g.clusters[g.cluster_ids[edge₁[2]]]) < K
-			add_edge!(g, edge₁)
-		else
-			add_edge!(g, edge₂)
-		end
-	end
+        if length(g.clusters[g.cluster_ids[edge₁[1]]]) < K &&
+           length(g.clusters[g.cluster_ids[edge₁[2]]]) < K
+            add_edge!(g, edge₁)
+        else
+            add_edge!(g, edge₂)
+        end
+    end
 
-	finalize_observables!(g)
-	return g
+    finalize_observables!(g)
+    return g
 end
 
 
 """
-	product_rule!(g::AbstractGraph, n_steps::Integer)
+    product_rule!(g::AbstractGraph, n_steps::Integer)
 
 Achlioptas process, implementation of the product rule
 
@@ -62,28 +63,31 @@ Returns
 * `g`, updates `g` in-place
 """
 function product_rule!(g::AbstractGraph, n_steps::Integer)
-	for t in 1:n_steps
-		edge₁ = choose_edge(g)
-		edge₂ = choose_edge(g, edge₁)
+    for t = 1:n_steps
+        edge₁ = choose_edge(g)
+        edge₂ = choose_edge(g, edge₁)
 
-		if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
-			add_edge!(g, edge₁)
-		elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
-			add_edge!(g, edge₂)
-		elseif length(g.clusters[g.cluster_ids[edge₁[1]]]) * length(g.clusters[g.cluster_ids[edge₁[2]]]) < length(g.clusters[g.cluster_ids[edge₂[1]]]) * length(g.clusters[g.cluster_ids[edge₂[2]]])
-			add_edge!(g, edge₁)
-		else
-			add_edge!(g, edge₂)
-		end
-	end
+        if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
+            add_edge!(g, edge₁)
+        elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
+            add_edge!(g, edge₂)
+        elseif length(g.clusters[g.cluster_ids[edge₁[1]]]) *
+               length(g.clusters[g.cluster_ids[edge₁[2]]]) <
+               length(g.clusters[g.cluster_ids[edge₂[1]]]) *
+               length(g.clusters[g.cluster_ids[edge₂[2]]])
+            add_edge!(g, edge₁)
+        else
+            add_edge!(g, edge₂)
+        end
+    end
 
-	finalize_observables!(g)
-	return g
+    finalize_observables!(g)
+    return g
 end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)
+    stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)
 
 Achlioptas process, a probability based model for accepting edges
 
@@ -94,34 +98,38 @@ Returns
 * `g`, updates `g` in-place
 """
 function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)
-	for t in 1:n_steps
-		edge₁ = choose_edge(g)
-		edge₂ = choose_edge(g, edge₁)
+    for t = 1:n_steps
+        edge₁ = choose_edge(g)
+        edge₂ = choose_edge(g, edge₁)
 
-		if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
-			add_edge!(g, edge₁)
-		elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
-			add_edge!(g, edge₂)
-		else
-			C₁ = length(g.clusters[g.cluster_ids[edge₁[1]]]) + length(g.clusters[g.cluster_ids[edge₁[2]]])
-			C₂ = length(g.clusters[g.cluster_ids[edge₂[1]]]) + length(g.clusters[g.cluster_ids[edge₂[2]]])
-			p = (1 / C₁) / (1 / C₁ + 1 / C₂)
+        if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
+            add_edge!(g, edge₁)
+        elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
+            add_edge!(g, edge₂)
+        else
+            C₁ =
+                length(g.clusters[g.cluster_ids[edge₁[1]]]) +
+                length(g.clusters[g.cluster_ids[edge₁[2]]])
+            C₂ =
+                length(g.clusters[g.cluster_ids[edge₂[1]]]) +
+                length(g.clusters[g.cluster_ids[edge₂[2]]])
+            p = (1 / C₁) / (1 / C₁ + 1 / C₂)
 
-			if p > rand(g.rng)
-				add_edge!(g, edge₁)
-			else
-				add_edge!(g, edge₂)
-			end
-		end
-	end
+            if p > rand(g.rng)
+                add_edge!(g, edge₁)
+            else
+                add_edge!(g, edge₂)
+            end
+        end
+    end
 
-	finalize_observables!(g)
-	return g
+    finalize_observables!(g)
+    return g
 end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, q::Integer)
+    stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, q::Integer)
 
 q-edge Achlioptas process, a probability based model for accepting edges
 
@@ -133,44 +141,49 @@ Returns
 * `g`, updates `g` in-place
 """
 function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, q::Integer)
-	for t in 1:n_steps
-		edges = [choose_edge(g)]
-		for i in 1:q-1
-			push!(edges, choose_edge(g, edges))
-		end
+    for t = 1:n_steps
+        edges = [choose_edge(g)]
+        for i = 1:q-1
+            push!(edges, choose_edge(g, edges))
+        end
 
-		edge_added = false
-		for edge in edges
-			if g.cluster_ids[edge[1]] == g.cluster_ids[edge[2]]
-				add_edge!(g, edge)
-				edge_added = true
-				break
-			end
-		end
-		if edge_added continue end
+        edge_added = false
+        for edge in edges
+            if g.cluster_ids[edge[1]] == g.cluster_ids[edge[2]]
+                add_edge!(g, edge)
+                edge_added = true
+                break
+            end
+        end
+        if edge_added
+            continue
+        end
 
-		C = [(length(g.clusters[g.cluster_ids[edge[1]]]) + length(g.clusters[g.cluster_ids[edge[2]]]))
-			for edge in edges
-		]
-		p = (1 ./ C) ./ sum(1 ./ C)
-		R = rand(g.rng)
-		P = 0
-		for i in 1:q
-			P += p[i]
-			if R < P
-				add_edge!(g, edges[i])
-				break
-			end
-		end
-	end
+        C = [
+            (
+                length(g.clusters[g.cluster_ids[edge[1]]]) +
+                length(g.clusters[g.cluster_ids[edge[2]]])
+            ) for edge in edges
+        ]
+        p = (1 ./ C) ./ sum(1 ./ C)
+        R = rand(g.rng)
+        P = 0
+        for i = 1:q
+            P += p[i]
+            if R < P
+                add_edge!(g, edges[i])
+                break
+            end
+        end
+    end
 
-	finalize_observables!(g)
-	return g
+    finalize_observables!(g)
+    return g
 end
 
 
 """
-	stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data::Dict, savepath::String)
+    stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data::Dict, savepath::String)
 
 Customized version of `stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer)` that
 saves the cluster size distrubtions at `t₀` and `t₁` to a .csv in savepath
@@ -183,52 +196,61 @@ Arguments
 Returns
 * `g`, updates `g` in-place
 """
-function stochastic_edge_acceptance!(g::AbstractGraph, n_steps::Integer, t_data::Dict, savepath::String)
-	t₀, t₁ = t_data[(g.N, Int(g.rng.seed[1]))]
-	for t in 1:n_steps
-		edge₁ = choose_edge(g)
-		edge₂ = choose_edge(g, edge₁)
+function stochastic_edge_acceptance!(
+    g::AbstractGraph,
+    n_steps::Integer,
+    t_data::Dict,
+    savepath::String,
+)
+    t₀, t₁ = t_data[(g.N, Int(g.rng.seed[1]))]
+    for t = 1:n_steps
+        edge₁ = choose_edge(g)
+        edge₂ = choose_edge(g, edge₁)
 
-		if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
-			add_edge!(g, edge₁)
-		elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
-			add_edge!(g, edge₂)
-		else
-			C₁ = length(g.clusters[g.cluster_ids[edge₁[1]]]) + length(g.clusters[g.cluster_ids[edge₁[2]]])
-			C₂ = length(g.clusters[g.cluster_ids[edge₂[1]]]) + length(g.clusters[g.cluster_ids[edge₂[2]]])
-			p = (1 / C₁) / (1 / C₁ + 1 / C₂)
+        if g.cluster_ids[edge₁[1]] == g.cluster_ids[edge₁[2]]
+            add_edge!(g, edge₁)
+        elseif g.cluster_ids[edge₂[1]] == g.cluster_ids[edge₂[2]]
+            add_edge!(g, edge₂)
+        else
+            C₁ =
+                length(g.clusters[g.cluster_ids[edge₁[1]]]) +
+                length(g.clusters[g.cluster_ids[edge₁[2]]])
+            C₂ =
+                length(g.clusters[g.cluster_ids[edge₂[1]]]) +
+                length(g.clusters[g.cluster_ids[edge₂[2]]])
+            p = (1 / C₁) / (1 / C₁ + 1 / C₂)
 
-			if p > rand(g.rng)
-				add_edge!(g, edge₁)
-			else
-				add_edge!(g, edge₂)
-			end
-		end
+            if p > rand(g.rng)
+                add_edge!(g, edge₁)
+            else
+                add_edge!(g, edge₂)
+            end
+        end
 
-		if t == t₀
-			savefile = joinpath(
-				savepath,
-				"t_0",
-				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
-				)
-			save_cluster_size_dict(g, savefile)
-		end
-		if t == t₁
-			savefile = joinpath(
-				savepath,
-				"t_1",
-				"$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv"
-				)
-			save_cluster_size_dict(g, savefile)
-		end
-	end
+        if t == t₀
+            savefile = joinpath(
+                savepath,
+                "t_0",
+                "$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_0_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv",
+            )
+            save_cluster_size_dict(g, savefile)
+        end
+        if t == t₁
+            savefile = joinpath(
+                savepath,
+                "t_1",
+                "$(typeof(g))_stochastic_edge_acceptance_$(Int(log2(g.N)))_t_1_cluster_size_distribution_seed_$(Int(g.rng.seed[1])).csv",
+            )
+            save_cluster_size_dict(g, savefile)
+        end
+    end
 
-	finalize_observables!(g)
-	return g
+    finalize_observables!(g)
+    return g
 end
 
 """
-	save_cluster_size_dict(d, n, savefile)
+    save_cluster_size_dict(d, n, savefile)
 Saves the input cluster size distribution dictionary `d` to `savefile`
 
 Arguments
@@ -237,12 +259,12 @@ Arguments
 * `savefile`: Path which to save the cluster size distributions in
 """
 function save_cluster_size_dict(g, savefile)
-	open(savefile, "w") do f
-		write(f, "# N = $(g.N)\n")
-		write(f, "# seed = $(Int(g.rng.seed[1]))\n")
-		write(f, "cluster_size,cluster_size_count\n")
-		for (key, value) in g.cluster_sizes
-			write(f, "$(key),$(value)\n")
-		end
-	end
+    open(savefile, "w") do f
+        write(f, "# N = $(g.N)\n")
+        write(f, "# seed = $(Int(g.rng.seed[1]))\n")
+        write(f, "cluster_size,cluster_size_count\n")
+        for (key, value) in g.cluster_sizes
+            write(f, "$(key),$(value)\n")
+        end
+    end
 end

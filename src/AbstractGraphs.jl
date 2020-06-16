@@ -1,5 +1,5 @@
 """
-	AbstractGraph
+    AbstractGraph
 
 Abstract type
 
@@ -11,7 +11,7 @@ abstract type AbstractGraph end
 
 
 """
-	AbstractNetwork
+    AbstractNetwork
 
 Abstract subtype of AbstractGraph
 
@@ -22,7 +22,7 @@ abstract type AbstractNetwork <: AbstractGraph end
 
 
 """
-	AbstractLattice
+    AbstractLattice
 
 Abstract subtype of AbstractGraph
 
@@ -34,7 +34,7 @@ abstract type AbstractLattice <: AbstractGraph end
 
 
 """
-	Observables
+    Observables
 
 Contains the observables associated to a percolation simulation.
 
@@ -45,28 +45,24 @@ Attributes
 * `delta`                : See analysis_methods.compute_delta for more info
 """
 mutable struct Observables
-	avg_cluster_size     ::Array{Float64, 1}
-	heterogeneity        ::Array{Int, 1}
-	largest_cluster_size ::Array{Int, 1}
-	delta                ::Tuple
+    avg_cluster_size::Array{Float64,1}
+    heterogeneity::Array{Int,1}
+    largest_cluster_size::Array{Int,1}
+    delta::Tuple
 
-	function Observables()
-		avg_cluster_size     = [1.0]
-		heterogeneity        = [1]
-		largest_cluster_size = [1]
-		delta                = ()
+    function Observables()
+        avg_cluster_size = [1.0]
+        heterogeneity = [1]
+        largest_cluster_size = [1]
+        delta = ()
 
-		new(avg_cluster_size,
-			heterogeneity,
-			largest_cluster_size,
-			delta
-			)
-	end
+        new(avg_cluster_size, heterogeneity, largest_cluster_size, delta)
+    end
 end
 
 
 """
-	Network(N::Integer; T::Type{<:Integer}=UInt32, seed::Integer=8)
+    Network(N::Integer; seed::Integer=8)
 
 This type represents a random network in which edges are allowed to be active between any two of the `N` nodes.
 It houses information about the nodes, edges, clusters, and observables.
@@ -74,7 +70,6 @@ It houses information about the nodes, edges, clusters, and observables.
 Arguments
 * `N`               : Total number of nodes in the network
 Keyword Arguments
-* `T`               : Type of Integer to use for tracking the clusters (default = UInt32)
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
 * `g`               : A new instance of type Network
@@ -88,40 +83,32 @@ Attributes
 * `rng`             : Random number generator
 * `observables`     : Custom type containing observables associated with `g`
 """
-mutable struct Network{T <: Integer} <: AbstractNetwork
-	N               ::Int
-	t               ::Int
-	edges           ::Set{Tuple{T, T}}
-	cluster_ids     ::Array{T, 1}
-	clusters        ::Dict{T, Set{T}}
-	cluster_sizes   ::Dict{T, T}
-	rng             ::MersenneTwister
-	observables     ::Observables
+mutable struct Network{T<:Integer} <: AbstractNetwork
+    N::Int
+    t::Int
+    edges::Set{Tuple{T,T}}
+    cluster_ids::Array{T,1}
+    clusters::Dict{T,Set{T}}
+    cluster_sizes::Dict{T,T}
+    rng::MersenneTwister
+    observables::Observables
 
-	function Network(N::Integer; T::Type{<:Integer}=UInt32, seed::Integer=8)
-		t                = 0
-		edges            = Set()
-		cluster_ids      = collect(UnitRange{T}(1, N))
-		clusters         = Dict(UnitRange{T}(1, N) .=> Set.(UnitRange{T}(1, N)))
-		cluster_sizes    = Dict(T(1) => T(N))
-		rng              = MersenneTwister(seed)
-		observables      = Observables()
+    function Network{T}(N::Integer; seed::Integer = 8) where {T <: Integer}
+        t = 0
+        edges = Set()
+        cluster_ids = collect(UnitRange{T}(1, N))
+        clusters = Dict(UnitRange{T}(1, N) .=> Set.(UnitRange{T}(1, N)))
+        cluster_sizes = Dict(T(1) => T(N))
+        rng = MersenneTwister(seed)
+        observables = Observables()
 
-		new{T}(N,
-			t,
-			edges,
-			cluster_ids,
-			clusters,
-			cluster_sizes,
-			rng,
-			observables
-			)
-	end
+        new(N, t, edges, cluster_ids, clusters, cluster_sizes, rng, observables)
+    end
 end
 
 
 """
-	Lattice2D(L::Integer; T::Type{<:Integer}=UInt32, seed::Integer=8)
+    Lattice2D(L::Integer; seed::Integer=8)
 
 This type represents a 2D lattice in which edges are only allowed to be active between nearest neighbors.
 It houses information about the nodes, edges, clusters, and observables.
@@ -129,7 +116,6 @@ It houses information about the nodes, edges, clusters, and observables.
 Arguments
 * `L`               : Side length of the square lattice
 Keyword Arguments
-* `T`               : Type of Integer to use for tracking the clusters (default = UInt32)
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
 * `g`               : A new instance of type Lattice2D
@@ -144,43 +130,34 @@ Attributes
 * `rng`             : Random number generator
 * `observables`     : Custom type containing observables associated with `g`
 """
-mutable struct Lattice2D{T <: Integer} <: AbstractLattice
-	L               ::Int
-	N               ::Int
-	t               ::Int
-	edges           ::Set{Tuple{T, T}}
-	cluster_ids     ::Array{T, 2}
-	clusters        ::Dict{T, Set{T}}
-	cluster_sizes   ::Dict{T, T}
-	rng             ::MersenneTwister
-	observables     ::Observables
+mutable struct Lattice2D{T<:Integer} <: AbstractLattice
+    L::Int
+    N::Int
+    t::Int
+    edges::Set{Tuple{T,T}}
+    cluster_ids::Array{T,2}
+    clusters::Dict{T,Set{T}}
+    cluster_sizes::Dict{T,T}
+    rng::MersenneTwister
+    observables::Observables
 
-	function Lattice2D(L::Integer; T::Type{<:Integer}=UInt32, seed::Integer=8)
-		N                = L^2
-		t                = 0
-		edges            = Set()
-		cluster_ids      = reshape(collect(UnitRange{T}(1, N)), (L, L))
-		clusters         = Dict(UnitRange{T}(1, N) .=> Set.(UnitRange{T}(1, N)))
-		cluster_sizes    = Dict(T(1) => T(N))
-		rng              = MersenneTwister(seed)
-		observables      = Observables()
+    function Lattice2D{T}(L::Integer; seed::Integer = 8) where {T <: Integer}
+        N = L^2
+        t = 0
+        edges = Set()
+        cluster_ids = reshape(collect(UnitRange{T}(1, N)), (L, L))
+        clusters = Dict(UnitRange{T}(1, N) .=> Set.(UnitRange{T}(1, N)))
+        cluster_sizes = Dict(T(1) => T(N))
+        rng = MersenneTwister(seed)
+        observables = Observables()
 
-		new{T}(L,
-			N,
-			t,
-			edges,
-			cluster_ids,
-			clusters,
-			cluster_sizes,
-			rng,
-			observables
-			)
-	end
+        new(L, N, t, edges, cluster_ids, clusters, cluster_sizes, rng, observables)
+    end
 end
 
 
 """
-	Lattice3D(L::Integer; T::Type{<:Integer}=UInt32, seed::Integer=8)
+    Lattice3D(L::Integer; seed::Integer=8)
 
 This type represents a 3D lattice in which edges are only allowed to be active between nearest neighbors.
 It houses information about the nodes, edges, clusters, and observables.
@@ -188,7 +165,6 @@ It houses information about the nodes, edges, clusters, and observables.
 Arguments
 * `L`               : Side length of the cubic lattice
 Keyword Arguments
-* `T`               : Type of Integer to use for tracking the clusters (default = UInt32)
 * `seed`            : Seed value for the random number generator (default = 8)
 Returns
 * `g`               : A new instance of type Lattice3D
@@ -203,36 +179,27 @@ Attributes
 * `rng`             : Random number generator
 * `observables`     : Custom type containing observables associated with `g`
 """
-mutable struct Lattice3D{T <: Integer} <: AbstractLattice
-	L               ::Int
-	N               ::Int
-	t               ::Int
-	edges           ::Set{Tuple{T, T}}
-	cluster_ids     ::Array{T, 3}
-	clusters        ::Dict{T, Set{T}}
-	cluster_sizes   ::Dict{T, T}
-	rng             ::MersenneTwister
-	observables     ::Observables
+mutable struct Lattice3D{T<:Integer} <: AbstractLattice
+    L::Int
+    N::Int
+    t::Int
+    edges::Set{Tuple{T,T}}
+    cluster_ids::Array{T,3}
+    clusters::Dict{T,Set{T}}
+    cluster_sizes::Dict{T,T}
+    rng::MersenneTwister
+    observables::Observables
 
-	function Lattice3D(L::Integer; T::Type{<:Integer}=UInt32, seed::Integer=8)
-		N                = L^3
-		t                = 0
-		edges            = Set()
-		cluster_ids      = reshape(collect(UnitRange{T}(1, N)), (L, L, L))
-		clusters         = Dict(UnitRange{T}(1, N) .=> Set.(UnitRange{T}(1, N)))
-		cluster_sizes    = Dict(T(1) => T(N))
-		rng              = MersenneTwister(seed)
-		observables      = Observables()
+    function Lattice3D{T}(L::Integer; seed::Integer = 8) where {T <: Integer}
+        N = L^3
+        t = 0
+        edges = Set()
+        cluster_ids = reshape(collect(UnitRange{T}(1, N)), (L, L, L))
+        clusters = Dict(UnitRange{T}(1, N) .=> Set.(UnitRange{T}(1, N)))
+        cluster_sizes = Dict(T(1) => T(N))
+        rng = MersenneTwister(seed)
+        observables = Observables()
 
-		new{T}(L,
-			N,
-			t,
-			edges,
-			cluster_ids,
-			clusters,
-			cluster_sizes,
-			rng,
-			observables
-			)
-	end
+        new(L, N, t, edges, cluster_ids, clusters, cluster_sizes, rng, observables)
+    end
 end
